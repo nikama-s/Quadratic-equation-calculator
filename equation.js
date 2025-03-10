@@ -1,3 +1,5 @@
+const readline = require("readline");
+
 function solveQuadraticEquation(a, b, c) {
   if (a === 0) {
     throw new Error("Error. a cannot be 0");
@@ -23,4 +25,39 @@ function solveQuadraticEquation(a, b, c) {
   }
 }
 
-solveQuadraticEquation(1, -3, 2);
+function interactive() {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+
+  function askForNumberInput(prompt, callback) {
+    rl.question(prompt, (input) => {
+      const num = parseFloat(input);
+      if (isNaN(num)) {
+        console.log(
+          `Error. Expected a valid real number, got ${input} instead`
+        );
+        askForNumberInput(prompt, callback);
+      } else {
+        callback(num);
+      }
+    });
+  }
+
+  askForNumberInput("a = ", (a) => {
+    askForNumberInput("b = ", (b) => {
+      askForNumberInput("c = ", (c) => {
+        try {
+          solveQuadraticEquation(a, b, c);
+        } catch (error) {
+          console.error(error.message);
+        }
+        rl.close();
+      });
+    });
+  });
+}
+
+// solveQuadraticEquation(1, -3, 2);
+interactive();
