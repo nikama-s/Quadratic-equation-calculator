@@ -27,7 +27,6 @@ function solveQuadraticEquation(a, b, c) {
 }
 
 function interactive() {
-  console.log("Starting interactive mode...");
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
