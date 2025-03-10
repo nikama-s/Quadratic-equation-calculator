@@ -1,4 +1,5 @@
 const readline = require("readline");
+const fs = require("fs");
 
 function solveQuadraticEquation(a, b, c) {
   if (a === 0) {
@@ -52,6 +53,7 @@ function interactive() {
           solveQuadraticEquation(a, b, c);
         } catch (error) {
           console.error(error.message);
+          process.exit(1);
         }
         rl.close();
       });
@@ -59,5 +61,34 @@ function interactive() {
   });
 }
 
-// solveQuadraticEquation(1, -3, 2);
-interactive();
+function fileMode(filePath) {
+  if (!fs.existsSync(filePath)) {
+    console.error(`file ${filePath} does not exist`);
+    process.exit(1);
+  }
+
+  const content = fs.readFileSync(filePath, "utf8").trim();
+  const parts = content.split(" ");
+
+  if (parts.length !== 3 || parts.some(isNaN)) {
+    console.error(
+      "invalid file format. Expected three numbers separated by one space."
+    );
+    process.exit(1);
+  }
+
+  const [a, b, c] = parts.map(Number);
+
+  try {
+    solveQuadraticEquation(a, b, c);
+  } catch (error) {
+    console.error(error.message);
+    process.exit(1);
+  }
+}
+
+if (process.argv.length === 3) {
+  fileMode(process.argv[2]);
+} else {
+  interactive();
+}
